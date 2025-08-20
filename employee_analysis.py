@@ -1,82 +1,49 @@
-# employee_analysis.py
-# Author: 24ds1000118@ds.study.iitm.ac.in
-
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 
-# -------------------------------
-# 1. Load Employee Data
-# -------------------------------
-data = """employee_id,department,region,performance_score,years_experience,satisfaction_rating
-EMP001,Marketing,North America,94.77,12,3.5
-EMP002,Sales,North America,69.99,2,4
-EMP003,Operations,Africa,65.12,8,4.7
-EMP004,Finance,Africa,62.69,15,3.5
-EMP005,Operations,Asia Pacific,85.06,4,3.2
-EMP006,R&D,Europe,91.25,10,4.6
-EMP007,R&D,Asia Pacific,87.40,6,4.8
-EMP008,Sales,North America,72.55,3,3.9
-EMP009,Marketing,Europe,78.30,7,4.1
-EMP010,R&D,North America,88.90,5,4.5
-"""
+# Your email (for verification)
+email = "24ds1000118@ds.study.iitm.ac.in"
 
-# Load into pandas
-from io import StringIO
-df = pd.read_csv(StringIO(data))
+# Sample dataset (small version for demo, can expand to 100 rows)
+data = {
+    "employee_id": ["EMP001","EMP002","EMP003","EMP004","EMP005","EMP006","EMP007","EMP008","EMP009","EMP010"],
+    "department": ["Marketing","Sales","Operations","Finance","Operations","R&D","R&D","Marketing","Sales","R&D"],
+    "region": ["North America","North America","Africa","Africa","Asia Pacific","Asia Pacific","Europe","Europe","North America","Europe"],
+    "performance_score": [94.77,69.99,65.12,62.69,85.06,77.45,90.12,55.32,70.44,82.99],
+    "years_experience": [12,2,8,15,4,6,10,3,5,11],
+    "satisfaction_rating": [3.5,4,4.7,3.5,3.2,4.1,4.8,2.9,3.7,4.5]
+}
 
-# -------------------------------
-# 2. Frequency Count for R&D
-# -------------------------------
+# Load into DataFrame
+df = pd.DataFrame(data)
+
+# Frequency count for R&D department
 rd_count = df[df['department'] == 'R&D'].shape[0]
 print("Frequency count for R&D department:", rd_count)
 
-# -------------------------------
-# 3. Create Histogram of Departments
-# -------------------------------
-plt.figure(figsize=(8,6))
-sns.histplot(df['department'], discrete=True, color="skyblue", edgecolor="black")
-plt.title("Distribution of Employees Across Departments")
+# Create histogram
+plt.figure(figsize=(8, 6))
+sns.countplot(data=df, x="department", palette="viridis")
+plt.title("Department Distribution of Employees")
 plt.xlabel("Department")
-plt.ylabel("Frequency")
+plt.ylabel("Count")
 
-# -------------------------------
-# 4. Save the visualization
-# -------------------------------
-# Save as PNG image
-plt.savefig("employee_department_analysis.png", dpi=300, bbox_inches='tight')
+# Save plot as image
+plt.savefig("department_histogram.png")
 
-# Also create a simple HTML file with the image embedded
-html_content = f"""
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Employee Department Analysis</title>
-    <style>
-        body {{ font-family: Arial, sans-serif; margin: 40px; }}
-        .container {{ max-width: 800px; margin: 0 auto; }}
-        .result {{ background-color: #f0f0f0; padding: 20px; margin: 20px 0; border-radius: 5px; }}
-        img {{ max-width: 100%; height: auto; }}
-    </style>
-</head>
-<body>
-    <div class="container">
-        <h1>Employee Department Analysis</h1>
-        <div class="result">
-            <h2>R&D Department Frequency Count</h2>
-            <p>Number of employees in R&D department: <strong>{rd_count}</strong></p>
-        </div>
-        <div class="result">
-            <h2>Distribution of Employees Across Departments</h2>
-            <img src="employee_department_analysis.png" alt="Department Distribution Chart">
-        </div>
-    </div>
-</body>
-</html>
-"""
-
+# Now embed both the plot and the email into an HTML file
 with open("employee_department_analysis.html", "w") as f:
-    f.write(html_content)
+    f.write(f"""
+    <html>
+    <head><title>Employee Department Analysis</title></head>
+    <body>
+        <h1>Employee Performance Analysis</h1>
+        <p><b>Email for verification:</b> {email}</p>
+        <p>Frequency count for R&D department: {rd_count}</p>
+        <img src="department_histogram.png" alt="Department Histogram">
+    </body>
+    </html>
+    """)
 
-print("✅ Visualization saved as employee_department_analysis.png")
-print("✅ Analysis report saved as employee_department_analysis.html")
+print("HTML file generated: employee_department_analysis.html")
